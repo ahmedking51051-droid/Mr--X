@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mr - X</title>
+  <meta name="description" content="برمجيات Mr -X">
+  
+  <!-- خطوط جوجل -->
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    /* متغيرات التصميم */
+    :root {
+      --primary-color: #3498db;
+      --secondary-color: #2c3e50;
+      --accent-color: #e74c3c;
+      --light-color: #ffffff;
+      --dark-color: #2c3e50;
+      --text-color: #333;
+      --font-main: 'Tajawal', sans-serif;
+      --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    /* إعادة الضبط */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background-color: #f5f5f5;
+      color: var(--text-color);
+      line-height: 1.7;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* شاشة التحميل */
+    #loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--light-color);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 3rem;
+      font-weight: bold;
+      color: black;
+    }
+
+    .loader-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid var(--accent-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* رأس الصفحة */
+    header {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: var(--light-color);
+      text-align: center;
+      padding: 3rem 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      animation: fadeInDown 1s ease;
+    }
+
+    header p {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      animation: fadeInUp 1s ease;
+    }
+
+    /* التنقل */
+    nav {
+      background: var(--dark-color);
+      display: flex;
+      justify-content: center;
+      padding: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: var(--box-shadow);
+    }
+
+    nav a {
+      color: var(--light-color);
+      padding: 0.8rem 1.5rem;
+      font-weight: 600;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    nav a:hover {
+      color: var(--accent-color);
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 0;
+      height: 3px;
+      background: var(--accent-color);
+      transition: var(--transition);
+    }
+
+    nav a:hover::after {
+      width: 100%;
+      left: 0;
+      right: auto;
+    }
+
+    /* الحاوية */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* معرض الصور */
+    .gallery-section {
+      padding: 4rem 0;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.8rem;
+      color: var(--primary-color);
+      margin-bottom: 2rem;
+      position: relative;
+      padding-bottom: 1rem;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 50%;
+      transform: translateX(50%);
+      width: 100px;
+      height: 4px;
+      background: var(--accent-color);
+    }
+
+    .gallery-filter {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .filter-btn {
+      padding: 0.5rem 1.5rem;
+      background: transparent;
+      border: 2px solid var(--accent-color);
+      color: var(--accent-color);
+      border-radius: 30px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 600;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      background: var(--accent-color);
+      color: var(--light-color);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .gallery-item {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--box-shadow);
+      transition: var(--transition);
+      aspect-ratio: 1/1;
+    }
+
+    .gallery-img {
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+    }
+
+    .gallery-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition);
+    }
+
+    .gallery-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(46, 62, 80, 0.9);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .gallery-item:hover .gallery-overlay {
+      opacity: 1;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.1);
+    }
+
+    .gallery-overlay h3 {
+      color: var(--light-color);
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      transform: translateY(20px);
+      transition: var(--transition);
+    }
+
+    .gallery-overlay p {
+      color: var(--light-color);
+      margin-bottom: 1rem;
+      transform: translateY(20px);
+      transition: var(--transition);
+      opacity: 0.8;
+      text-align: center;
+      padding: 0 1rem;
+    }
+
+    .gallery-overlay a {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+      background: var(--accent-color);
+      color: var(--light-color);
+      border-radius: 50%;
+      margin: 0 0.5rem;
+      transform: translateY(20px);
+      transition: var(--transition);
+    }
+
+    .gallery-overlay a:hover {
+      background: var(--light-color);
+      color: var(--accent-color);
+    }
+
+    .gallery-item:hover .gallery-overlay h3,
+    .gallery-item:hover .gallery-overlay p,
+    .gallery-item:hover .gallery-overlay a {
+      transform: translateY(0);
+    }
+
+    /* الفوتر */
+    footer {
+      background: var(--dark-color);
+      color: var(--light-color);
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .social-links a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      transition: var(--transition);
+    }
+
+    .social-links a:hover {
+      background: var(--accent-color);
+      transform: translateY(-5px);
+    }
+
+    .copyright {
+      margin-top: 1rem;
+      opacity: 0.8;
+    }
+
+    /* العودة للأعلى */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      left: 30px;
+      width: 50px;
+      height: 50px;
+      background: var(--accent-color);
+      color: var(--light-color);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.2rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+
+    .back-to-top.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .back-to-top:hover {
+      background: #c0392b;
+      transform: translateY(-5px);
+    }
+
+    /* معرض الضوء (Lightbox) */
+    .lightbox {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+
+    .lightbox.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .lightbox-content {
+      position: relative;
+      max-width: 90%;
+      max-height: 90%;
+    }
+
+    .lightbox-content img {
+      max-height: 80vh;
+      border-radius: 5px;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      color: var(--light-color);
+      font-size: 2rem;
+      cursor: pointer;
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 1rem;
+    }
+
+    .lightbox-nav button {
+      background: rgba(255, 255, 255, 0.3);
+      color: var(--light-color);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .lightbox-nav button:hover {
+      background: var(--accent-color);
+    }
+
+    /* حركات */
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* تكبير نص قسم عني */
+.about-section p {
+  font-family: 'Cairo', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: #1A202C;
+  line-height: 1.9;
+} 
+
+    /* استجابة الموبايل */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2.2rem;
+      }
+      
+      header p {
+        font-size: 1.2rem;
+      }
+      
+      .section-title {
+        font-size: 2.2rem;
+      }
+      
+      .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+    }
+
+    @media (max-width: 576px) {
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- شاشة التحميل -->
+  <div id="loader">
+    <div class="loader-spinner"></div>
+    <div>Loading...</div>
+    
+  </div>
+
+  <!-- رأس الصفحة -->
+  <header id="home">
+    <h1>Mr-X</h1>
+    <p>Welcome to the store Mr-X</p>
+  </header>
+
+  <!-- التنقل -->
+  <nav>
+    <a href="#home" class="active">Main</a>
+    <a href="#gallery">Products</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <!-- معرض الصور -->
+  <section id="gallery" class="gallery-section">
+    <div class="container">
+      <h2 class="section-title">Some products</h2>
+      
+      <div class="gallery-filter">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="books">📚 Books</button>
+        <button class="filter-btn" data-filter="corses">🎞️Courses</button>
+        <button class="filter-btn" data-filter="web">🌐Web</button>
+        <button class="filter-btn" data-filter="acc">👤Accounts</button>
+      </div>
+      
+      <div class="gallery-grid">
+        <!-- صورة 1 -->
+        <div class="gallery-item" data-category="corses">
+          <div class="gallery-img">
+            <img src="https://i.postimg.cc/k59LHmfG/98b74bd92cfaedb1a06fb51d87271e6b.jpg" alt="corses">
+            <div class="gallery-overlay">
+              <h3>course</h3>
+              <p>Click here to see the available courses</p>
+               <button class="filter-btn" onclick="window.location.href='https://youtube.com/shorts/XAZwDY7coUg?si=nKZcHx6YFW-lr3DX' ">free</button>
+            
+            </div>
+          </div>
+        </div>
+        
+        <!-- صورة 2 -->
+        <div class="gallery-item" data-category="web">
+          <div class="gallery-img">
+            <img src="https://i.postimg.cc/Wb1yg8tF/8fc6762b8af5cb7f8af1f88dc9674302-2.jpg" alt="web">
+            <div class="gallery-overlay">
+              <h3>Website</h3>
+              <p>Ready-to-use sites for purchase and use. To purchase, click the button.</p>
+               <button class="filter-btn" onclick="window.location.href='https://youtube.com/shorts/XAZwDY7coUg?si=nKZcHx6YFW-lr3DX' ">Buy</button>
+            
+            </div>
+          </div>
+        </div>
+        
+        <!-- صورة 3 -->
+        <div class="gallery-item" data-category="acc">
+          <div class="gallery-img">
+            <img src="https://i.postimg.cc/SxqrF7zQ/f70aa4765c85228cd00bf72929d14287-2.jpg" alt="acc">
+            <div class="gallery-overlay">
+              <h3>Facebook account</h3>
+              <p>Free Facebook accounts for a limited period.</p>
+               <button class="filter-btn" onclick="window.location.href='https://t.me/Tbd5bot' ">free</button>
+            
+            </div>
+          </div>
+        </div>
+        
+        <!-- صورة 4 -->
+        <div class="gallery-item" data-category="books">
+          <div class="gallery-img">
+            <img src="https://i.postimg.cc/K8w83Qrx/Screenshot-20250920-220345-2.jpg" alt="books">
+            <div class="gallery-overlay">
+              <h3>Python </h3>
+              <p>Python learning book, 115 pages</p>
+               <button class="filter-btn" onclick="window.location.href='https://youtube.com/shorts/XAZwDY7coUg?si=nKZcHx6YFW-lr3DX' ">free</button>
+            
+            </div>
+          </div>
+        </div>
+        
+        <!-- صورة 5 -->
+        <div class="gallery-item" data-category="acc">
+          <div class="gallery-img">
+            <img src="https://i.postimg.cc/Kzs1xmKZ/a3279151fb89d25c65142b10c650f787.jpg" alt="صورة طبيعة">
+            <div class="gallery-overlay">
+              <h3>Tik Tok</h3>
+              <p>TikTok accounts for sale ready.</p>
+                   <button class="filter-btn" onclick="window.location.href='https://youtube.com/shorts/XAZwDY7coUg?si=nKZcHx6YFW-lr3DX' ">free</button>
+            
+            </div>
+          </div>
+        </div>
+        
+        <!-- صورة 6 -->
+        <div class="gallery-item" data-category="books">
+          <div class="gallery-img">
+            <img src="https://i.postimg.cc/76CzWK9t/cec624ad903c26bc9fa5bec0457bd0fd-2.jpg" alt="books">
+            <div class="gallery-overlay">
+              <h3>Cybersecurity Map</h3>
+              <p>How to Learn Cybersecurity Easily</p>
+                   <button class="filter-btn" onclick="window.location.href='https://youtube.com/shorts/XAZwDY7coUg?si=nKZcHx6YFW-lr3DX' ">free</button>
+            
+            </div>
+          </div>
+        </div>
+        
+        <!-- صورة 7 -->
+        <div class="gallery-item" data-category="books">
+          <div class="gallery-img">
+            <img src="https://i.postimg.cc/6qcBLXZk/1b5156e7791aa3b3fcb70d6b458cedda-2.jpg" alt="books">
+            <div class="gallery-overlay">
+              <h3>Learn Android App Development</h3>
+              <p>The book explains the best and fastest way to create your own application.</p>
+                  <button class="filter-btn" onclick="window.location.href='https://youtube.com/shorts/XAZwDY7coUg?si=nKZcHx6YFW-lr3DX' ">buy</button>
+            
+            </div>
+          </div>
+        </div>
+        
+        <!-- صورة 8 -->
+        <div class="gallery-item" data-category="books">
+          <div class="gallery-img">
+            <img src="https://i.postimg.cc/y8Sw7Kd7/ac072899fd1b1f09556ed1958f81e397.jpg" alt="books">
+            <div class="gallery-overlay">
+              <h3>Computer Basics</h3>
+              <p>Learn computer basics from scratch to professionalism with this book</p>
+               <button class="filter-btn" onclick="window.location.href='https://youtube.com/shorts/XAZwDY7coUg?si=nKZcHx6YFW-lr3DX' ">buy</button>
+            
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- قسم عني -->
+  <section id="about" class="about-section">
+    <div class="container">
+      <h2 class="section-title">information</h2>
+      <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+        <p>I am a professional programmer and I provide content on social media,</p>
+        <p>There is a complete gallery of courses on the development of technology, both free and paid. </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- قسم التواصل -->
+  <section id="contact" class="contact-section">
+    <div class="container">
+      <h2 class="section-title">Contact</h2>
+      <div style="text-align: center; max-width: 800px; margin: 0 auto 2rem;">
+        <p>To communicate or purchase anything, we are at your service.</p>
+      </div>
+      
+      <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: var(--box-shadow); max-width: 600px; margin: 0 auto;">
+        <form>
+          <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">الاسم الكامل</label>
+            <a href="https://wa.me/201507786877">WhatsApp</a>
+        <a href="https://t.me/Tbd5bot">Telegram</a>
+        <a href="رابط_الموقع">اضغط هنا</a>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- الفوتر -->
+  <footer>
+    <div class="social-links">
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-500px"></i></a>
+    </div>
+    <p>تابعني على وسائل التواصل الاجتماعي</p>
+    <div class="copyright">
+      &copy; <span id="year"></span> by ahmed Alshref جميع الحقوق محفوظة.
+    </div>
+  </footer>
+
+  <!-- العودة للأعلى -->
+  <a href="#home" class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+  </a>
+
+  <!-- معرض الضوء -->
+  <div class="lightbox">
+    <div class="lightbox-content">
+      <span class="lightbox-close">&times;</span>
+      <img src="" alt="Lightbox Image">
+      <div class="lightbox-nav">
+        <button class="lightbox-prev"><i class="fas fa-chevron-right"></i></button>
+        <button class="lightbox-next"><i class="fas fa-chevron-left"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // إخفاء اللودر بعد التحميل
+    window.addEventListener("load", function() {
+      const loader = document.getElementById("loader");
+      setTimeout(() => {
+        loader.style.opacity = "0";
+        setTimeout(() => {
+          loader.style.display = "none";
+        }, 1000);
+      }, 2000);
+    });
+
+    // تصفية المعرض
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // إزالة النشط من جميع الأزرار
+        filterBtns.forEach(btn => btn.classList.remove('active'));
+        // إضافة النشط للزر المحدد
+        btn.classList.add('active');
+        
+        const filter = btn.getAttribute('data-filter');
+        
+        galleryItems.forEach(item => {
+          if (filter === 'all' || item.getAttribute('data-category') === filter) {
+            item.style.display = 'block';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // إظهار زر العودة للأعلى عند التمرير
+    const backToTop = document.querySelector('.back-to-top');
+    
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        backToTop.classList.add('active');
+      } else {
+        backToTop.classList.remove('active');
+      }
+    });
+
+    // إضافة سنة حقوق النشر تلقائياً
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // معرض الضوء
+    const lightbox = document.querySelector('.lightbox');
+    const lightboxImg = lightbox.querySelector('img');
+    const lightboxClose = lightbox.querySelector('.lightbox-close');
+    const viewButtons = document.querySelectorAll('.view-image');
+    const lightboxPrev = lightbox.querySelector('.lightbox-prev');
+    const lightboxNext = lightbox.querySelector('.lightbox-next');
+    
+    let currentImageIndex = 0;
+    const images = Array.from(document.querySelectorAll('.gallery-img img'));
+    
+    // فتح معرض الضوء
+    viewButtons.forEach((btn, index) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        currentImageIndex = index;
+        const imgSrc = images[index].getAttribute('src');
+        lightboxImg.setAttribute('src', imgSrc);
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+    
+    // إغلاق معرض الضوء
+    lightboxClose.addEventListener('click', () => {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    });
+    
+    // التنقل بين الصور
+    lightboxPrev.addEventListener('click', () => {
+      currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+      lightboxImg.setAttribute('src', images[currentImageIndex].getAttribute('src'));
+    });
+    
+    lightboxNext.addEventListener('click', () => {
+      currentImageIndex = (currentImageIndex + 1) % images.length;
+      lightboxImg.setAttribute('src', images[currentImageIndex].getAttribute('src'));
+    });
+    
+    // إغلاق بالنقر خارج الصورة
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      }
+    });
+    
+    // إغلاق بالزر ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      }
+    });
+  </script>
+</body>
+</html>
